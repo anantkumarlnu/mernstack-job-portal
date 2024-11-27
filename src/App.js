@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "./store";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
-import theme from "./custom_theme"; 
+import theme from "./custom_theme";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
@@ -14,19 +16,14 @@ import JobListings from "./pages/JobListings/JobListings";
 import Contact from "./pages/Contact/Contact";
 import CompanyShowcase from "./pages/CompanyShowcase/CompanyShowcase";
 import LoginForm from "./pages/Login/LoginForm";
-// import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const session = localStorage.getItem("session");
-    setIsAuthenticated(!!session);
-  }, []);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("session");
-    setIsAuthenticated(false);
+    dispatch(logout());
   };
 
   return (
@@ -44,11 +41,7 @@ const App = () => {
             <Route
               path="/login"
               element={
-                !isAuthenticated ? (
-                  <LoginForm setIsAuthenticated={setIsAuthenticated} />
-                ) : (
-                  <Navigate to="/home" />
-                )
+                !isAuthenticated ? <LoginForm /> : <Navigate to="/home" />
               }
             />
             <Route
