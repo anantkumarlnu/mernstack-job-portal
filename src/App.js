@@ -15,10 +15,12 @@ import About from "./pages/About/About";
 import JobListings from "./pages/JobListings/JobListings";
 import Contact from "./pages/Contact/Contact";
 import CompanyShowcase from "./pages/CompanyShowcase/CompanyShowcase";
+import Employees from "./pages/Employees/Employees"; // Import Employees
 import LoginForm from "./pages/Login/LoginForm";
 
 const App = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const userType = useSelector((state) => state.auth.userType); // Get user type
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -30,7 +32,9 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        {isAuthenticated && <Navbar onLogout={handleLogout} />}
+        {isAuthenticated && (
+          <Navbar onLogout={handleLogout} userType={userType} />
+        )}
         <Box
           sx={{
             backgroundColor: theme.palette.background.default,
@@ -41,33 +45,61 @@ const App = () => {
             <Route
               path="/login"
               element={
-                !isAuthenticated ? <LoginForm /> : <Navigate to="/home" />
+                !isAuthenticated ? (
+                  <LoginForm />
+                ) : (
+                  <Navigate
+                    to={userType === "admin" ? "/employees" : "/home"}
+                  />
+                )
               }
             />
-            <Route
-              path="/home"
-              element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/about"
-              element={isAuthenticated ? <About /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/jobs"
-              element={
-                isAuthenticated ? <JobListings /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/contact"
-              element={isAuthenticated ? <Contact /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/companies"
-              element={
-                isAuthenticated ? <CompanyShowcase /> : <Navigate to="/login" />
-              }
-            />
+            {userType === "employee" && (
+              <>
+                <Route
+                  path="/home"
+                  element={
+                    isAuthenticated ? <Home /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/about"
+                  element={
+                    isAuthenticated ? <About /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/jobs"
+                  element={
+                    isAuthenticated ? <JobListings /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/contact"
+                  element={
+                    isAuthenticated ? <Contact /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/companies"
+                  element={
+                    isAuthenticated ? (
+                      <CompanyShowcase />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+              </>
+            )}
+            {userType === "admin" && (
+              <Route
+                path="/employees"
+                element={
+                  isAuthenticated ? <Employees /> : <Navigate to="/login" />
+                }
+              />
+            )}
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </Box>

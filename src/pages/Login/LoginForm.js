@@ -40,8 +40,8 @@ const LoginForm = () => {
       const { user } = response.data;
       localStorage.setItem("session", JSON.stringify(user));
       localStorage.setItem("userImages", JSON.stringify(user.imagesPath));
-      dispatch(login());
-      navigate("/home");
+      dispatch(login({ userType: user.type }));
+      navigate(user.type === "admin" ? "/employees" : "/home");
     } catch (err) {
       setError(err.response?.data?.error || "An error occurred.");
     }
