@@ -21,7 +21,7 @@ const Navbar = ({ onLogout, userType }) => {
               <Button color="inherit" component={Link} to="/about">
                 About
               </Button>
-              <Button color="inherit" component={Link} to="/jobs">
+              <Button color="inherit" component={Link} to="/jobs-listing">
                 Job Listings
               </Button>
               <Button color="inherit" component={Link} to="/contact">
@@ -29,6 +29,9 @@ const Navbar = ({ onLogout, userType }) => {
               </Button>
               <Button color="inherit" component={Link} to="/companies">
                 Company Showcase
+              </Button>
+              <Button color="inherit" component={Link} to="/jobs">
+                Jobs
               </Button>
             </>
           )}

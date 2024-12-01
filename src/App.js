@@ -17,6 +17,7 @@ import Contact from "./pages/Contact/Contact";
 import CompanyShowcase from "./pages/CompanyShowcase/CompanyShowcase";
 import Employees from "./pages/Employees/Employees";
 import AddJob from "./pages/addJob/addJob";
+import Jobs from "./pages/Jobs/Jobs"; // Import Jobs page
 import LoginForm from "./pages/Login/LoginForm";
 
 const App = () => {
@@ -70,7 +71,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/jobs"
+                  path="/jobs-listing"
                   element={
                     isAuthenticated ? <JobListings /> : <Navigate to="/login" />
                   }
@@ -89,6 +90,12 @@ const App = () => {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/jobs"
+                  element={
+                    isAuthenticated ? <Jobs /> : <Navigate to="/login" />
                   }
                 />
               </>
