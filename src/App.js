@@ -15,12 +15,13 @@ import About from "./pages/About/About";
 import JobListings from "./pages/JobListings/JobListings";
 import Contact from "./pages/Contact/Contact";
 import CompanyShowcase from "./pages/CompanyShowcase/CompanyShowcase";
-import Employees from "./pages/Employees/Employees"; // Import Employees
+import Employees from "./pages/Employees/Employees";
+import AddJob from "./pages/addJob/addJob";
 import LoginForm from "./pages/Login/LoginForm";
 
 const App = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const userType = useSelector((state) => state.auth.userType); // Get user type
+  const userType = useSelector((state) => state.auth.userType);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -93,12 +94,20 @@ const App = () => {
               </>
             )}
             {userType === "admin" && (
-              <Route
-                path="/employees"
-                element={
-                  isAuthenticated ? <Employees /> : <Navigate to="/login" />
-                }
-              />
+              <>
+                <Route
+                  path="/employees"
+                  element={
+                    isAuthenticated ? <Employees /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/addJob"
+                  element={
+                    isAuthenticated ? <AddJob /> : <Navigate to="/login" />
+                  }
+                />
+              </>
             )}
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>

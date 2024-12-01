@@ -33,9 +33,14 @@ const Navbar = ({ onLogout, userType }) => {
             </>
           )}
           {userType === "admin" && (
-            <Button color="inherit" component={Link} to="/employees">
-              Employees
-            </Button>
+            <>
+              <Button color="inherit" component={Link} to="/employees">
+                Employees
+              </Button>
+              <Button color="inherit" component={Link} to="/addJob">
+                Create Jobs
+              </Button>
+            </>
           )}
         </Box>
         <Button color="inherit" onClick={onLogout}>
