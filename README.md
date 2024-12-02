@@ -78,3 +78,43 @@ The custom Material UI theme from Assignment 9 is reused, maintaining visual con
 - **Global Styling**:  
   The theme is applied globally using Material UI’s `ThemeProvider` and `CssBaseline`, ensuring a cohesive design language across all pages.
 
+---
+
+## **Backend Changes**
+
+### **User Creation API**
+- **Inclusion of User Type**  
+  The `/user/create` API now requires a `type` field that must be either `employee` or `admin`. This ensures that every user has a designated role within the application. Validation has been added to confirm that the `type` value matches one of these two options.  
+
+---
+
+### **Job Management APIs**
+- **Routes and Controllers**:  
+  Two new job-related routes have been introduced to handle job creation and retrieval:
+  - **`POST /jobs/create`**: Allows admins to create new job postings.
+  - **`GET /jobs/get`**: Lets employees retrieve a list of all available jobs.
+
+- **Jobs Collection**:  
+  A new `jobs` collection has been added to the existing `userdb` database. This collection stores all job postings, including details like `companyName`, `jobTitle`, `description`, `salary`, and `location`.
+
+- **Schema and Validation**:  
+  The `Job` schema ensures that every job posting adheres to a defined structure:
+  - **Required Fields**:  
+    - `companyName`: Must be a string and cannot be empty.  
+    - `jobTitle`: A non-empty string to identify the role.  
+    - `description`: A detailed string outlining the job.  
+    - `salary`: A number representing the salary offered.  
+    - `location`: A string, validated to ensure it matches general address conventions.
+  - The schema catches missing or invalid fields during job creation.
+
+- **The Create Job API**:  
+  The `/jobs/create` API not only validates the input but also ensures that only admins can access this route. The payload is checked in the component and also against the schema to confirm all required fields are present. 
+
+- **The Get Jobs API**:  
+  The `/jobs/get` API fetches all available jobs from the `jobs` collection. The data is cleanly structured and ready to be consumed by the frontend. 
+
+---
+
+### **Get All Users API**
+- **Removal of Password From the Response**:  
+  The `/user/getAll` API was tweaked to ensure passwords are excluded from the response. By adding `{ password: 0 }` in the MongoDB query projection, the API now returns all user details except for their passwords. 
