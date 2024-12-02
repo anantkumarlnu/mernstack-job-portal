@@ -1,6 +1,11 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../../store"; // Import the login action
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateLoginDetails,
+  setLoginError,
+  resetLoginDetails,
+  login,
+} from "../../store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -14,22 +19,26 @@ import {
 } from "@mui/material";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { email, password, error } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    dispatch(updateLoginDetails({ [e.target.name]: e.target.value }));
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    dispatch(setLoginError(""));
     if (email.trim() === "" || password.trim() === "") {
-      setError("Email and Password fields cannot be empty.");
+      dispatch(setLoginError("Email and Password fields cannot be empty."));
       return;
     }
     const emailRegex = /^[a-zA-Z0-9](\.?[a-zA-Z0-9_%+-])*@northeastern\.edu$/;
     if (!emailRegex.test(email)) {
-      setError("Invalid email format. Please use a Northeastern email.");
+      dispatch(
+        setLoginError("Invalid email format. Please use a Northeastern email.")
+      );
       return;
     }
     try {
@@ -39,11 +48,13 @@ const LoginForm = () => {
       });
       const { user } = response.data;
       localStorage.setItem("session", JSON.stringify(user));
-      localStorage.setItem("userImages", JSON.stringify(user.imagesPath));
       dispatch(login({ userType: user.type }));
+      dispatch(resetLoginDetails());
       navigate(user.type === "admin" ? "/employees" : "/home");
     } catch (err) {
-      setError(err.response?.data?.error || "An error occurred.");
+      dispatch(
+        setLoginError(err.response?.data?.error || "An error occurred.")
+      );
     }
   };
 
@@ -69,8 +80,9 @@ const LoginForm = () => {
               margin="normal"
               label="Email"
               variant="outlined"
+              name="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
             />
             <TextField
               fullWidth
@@ -78,8 +90,9 @@ const LoginForm = () => {
               label="Password"
               variant="outlined"
               type="password"
+              name="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
             />
             <Button
               fullWidth
