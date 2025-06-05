@@ -1,4 +1,4 @@
-# **FNUAnantKumar-ASSIGNMENT-10-INFO-6150**
+# **ASSIGNMENT-10-INFO-6150**
 
 ## **React Job Portal with Redux, Material UI, and Axios**
 
